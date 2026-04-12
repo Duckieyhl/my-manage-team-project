@@ -6,7 +6,14 @@ class TaskRepository {
     }
 
     async findbyID(taskID) {
-        return await task.find(taskID)
+        return await task.findById(taskID)
+    }
+
+    async delete(taskId) {
+        return await task.delete(taskId)
+    }
+    async findAndUpdate(taskId, data) {
+        return await
     }
 }
 
