@@ -1,16 +1,21 @@
 const express = require('express')
 const taskController = require('../controllers/taskController')
 const router = express.Router()
+const cors = express.cors();
+const { authMiddleware } = require('../middlewares/auth.middleware');
 
-router.post('createTask', taskController.createTask);
+router.use(cors())
+router.use(authMiddleware);
 
-router.get('taskID', taskController.getDetailTask);
+router.post('/createTask', taskController.createTask);
 
-router.get('myTask', taskController.getAllTasksGlobal);
+router.get('/:taskID', taskController.getDetailTask);
 
-router.delete('taskID', taskController.deleteTask);
+router.get('/myTask', taskController.getAllTasksGlobal);
 
-router.update('')
+router.delete('/:taskID', taskController.deleteTask);
+
+router.update('/:taskId', taskController.updateTask);
 
 module.exports = router;
 

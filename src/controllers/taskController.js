@@ -1,23 +1,37 @@
 const TaskService = require('../services/task.service');
 
 class TaskController {
+    //Create
     async createTask(req, res) {
         try {
+            // nhớ chỉnh url sao cho
+            const { title, description, deadline, project_id, assign_id } = req.body;
 
-            // Ví dụ logic: Kiểm tra deadline có hợp lệ không 
-            if (new Date(req.body.deadline) < new Date()) {
-                throw new Error("Deadline không được ở trong quá khứ!");
-            }
+            // Lấy userId của người tạo từ Middleware Auth (như đã bàn)
+            const createdBy = req.user.id;
 
-            // các logic khác mà mình chưa nghĩ ra ở hiện tại sẽ ở đây
+            // Gom lại để gửi xuống Service xử lý
+            const newTaskData = {
+                title,
+                description,
+                deadline,
+                project_id,
+                assign_id,
+                createdBy
+            };
 
-            const task = await TaskService.createNewTask(req.body);
-            res.status(201).json(task);
+            const task = await TaskService.createNewTask(newTaskData);
+
+            res.status(201).json({
+                message: "Tạo công việc thành công!",
+                data: task
+            });
         } catch (error) {
             res.status(400).json({ message: error.message });
         }
     }
 
+    //Delete
     async deleteTask(req, res) {
         try {
             const { taskId } = req.params;
@@ -31,10 +45,11 @@ class TaskController {
         }
     }
 
+    //Read (detail)
     async getDetailTask(req, res) {
         try {
             const taskID = req.params.taskID;
-            const task = await taskService.getTask(taskID);
+            const task = await taskService.getDetaliTask(taskID);
             if (!task) {
                 return res.status(404).json({ message: "Task đã bị xóa hoặc không tồn tại" });
             }
@@ -44,6 +59,7 @@ class TaskController {
         }
     }
 
+    //Read (All)
     async getAllTasksGlobal(req, res) {
         try {
             // Bạn có thể lấy userId từ token để lọc task của riêng người đó
@@ -58,10 +74,13 @@ class TaskController {
         }
     }
 
+    //Update
     async updateTask(req, res) {
         try {
-            const { taskId } = req.params;
-            const updateData = req.body; // Lấy dữ liệu mới từ người dùng (tên, status,...)
+            const { taskID } = req.params; // Lấy từ URL (giống Get Detail)
+            const updateData = req.body;   // Lấy từ Body (giống Create Task)
+            const userId = req.user.id;    // Lấy từ Token để check quyền
+
 
             // Những trường bạn CHO PHÉP người dùng sửa
             const allowedUpdates = ['title', 'description', 'status', 'deadline', 'priority', 'assignedTo'];
@@ -74,12 +93,13 @@ class TaskController {
                 }
             });
 
-            // 2. Nếu Service trả về null (không tìm thấy task để sửa)
-            if (!updatedTask) {
-                return res.status(404).json({ message: "Dữ liệu ko đổi" });
+            // Kiểm tra nếu sau khi lọc mà không có trường nào hợp lệ để sửa
+            if (Object.keys(updates).length === 0) {
+                return res.status(400).json({ message: "Không có dữ liệu hợp lệ để cập nhật!" });
             }
 
-            // 3. Trả về kết quả thành công và dữ liệu mới
+            const updatedTask = await TaskService.updateTask(taskID, userId, updateData);
+            // 2. Trả về kết quả thành công và dữ liệu mới
             res.status(200).json({
                 message: "Cập nhật công việc thành công!",
                 data: updatedTask
@@ -90,7 +110,6 @@ class TaskController {
             res.status(400).json({ message: error.message });
         }
     }
-}
 }
 
 module.exports = new TaskController();
