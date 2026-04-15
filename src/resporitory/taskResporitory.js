@@ -12,7 +12,7 @@ class TaskRepository {
     async Delete(taskId) {
         return await task.delete(taskId)
     }
-    async findByUserId(userId) {
+    async findByUserId(userId) { // nên kiểm tra lại cái này 
         // Tìm tất cả Task có assign_id là userId và chưa bị xóa
         return await Task.find({
             assign_id: userId,

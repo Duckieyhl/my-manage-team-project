@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const taskSchema = new mongoose.Schema({
     project_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Project' },
-    sprint_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Sprint' },
+    // sprint_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Sprint' },
     title: { type: String, required: true },
     description: String,
     status: { type: String, enum: ['Todo', 'Doing', 'Done'], default: 'Todo' },
