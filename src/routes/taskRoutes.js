@@ -1,11 +1,11 @@
 const express = require('express')
 const taskController = require('../controllers/taskController')
 const router = express.Router()
-const cors = express.cors();
-const { authMiddleware } = require('../middlewares/auth.middleware');
+const cors = require("cors");
+// const { authMiddleware } = require('../middlewares/auth.middleware');
 
 router.use(cors())
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 // --- 1. Những cái cụ thể, không chứa biến :id cho lên ĐẦU ---
 // router.post('/createTask', taskController.createTask);

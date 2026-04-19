@@ -1,7 +1,7 @@
-const projectResporitory = require('..resporitory/projectResporitory')
-const taskService = require('taskService')
+const projectResporitory = require('../resporitory/projectResporitory')
+const taskService = require('./taskService')
 const task = require('../models/task')
-const projectMemberRepository = require('../repositories/projectMember.repository');
+// const projectMemberRepository = require('../repositories/projectMemberRepository');
 
 
 class projectService {
@@ -79,13 +79,65 @@ class projectService {
             throw new Error("Không tìm thấy dự án này!");
         }
         const projectLeader_id = project.projectLeader_id;
-        if (userId.toString() === projectLeader_id.toString()) {
-            return await projectResporitory.update(projectId, updateData);
+        if (userId.toString() !== projectLeader_id.toString()) {
+            throw new Error("Bạn không có quyền chỉnh sửa dự án này!");
         }
-        else {
-            throw new Error("Bạn không phải Leader của dự án này, không có quyền chỉnh sửa!");
-        }
+
+        // Nếu đã chạy xuống đến đây thì chắc chắn là Leader rồi
+        return await projectResporitory.update(projectId, updateData);
     }
+
+    async addMember(projectId, userId, memberId) {
+        const project = await projectResporitory.findbyId(projectId); // tra ve object
+        if (!project) {
+            throw new Error("Không tìm thấy dự án này!");
+        }
+        const projectLeader_id = project.projectLeader_id;
+        const leaderTeam = project.createBy;
+        const canAdd = userId.toString() === leaderTeam.toString() ||
+            userId.toString() === projectLeader_id.toString();
+
+        if (!canAdd) {
+            throw new Error("Bạn không có quyền thêm thành viên vào dự án này!");
+        }
+
+        // CHECK QUAN TRỌNG: Người này đã có trong dự án chưa?
+        const isAlreadyMember = await projectMemberRepository.checkMemberInProject(projectId, memberId);
+        if (isAlreadyMember) {
+            throw new Error("Người này đã là thành viên của dự án rồi!");
+        }
+
+        //  Nếu mọi thứ OK, gọi Repository để tạo bản ghi mới
+        // nên truyền role mặc định là 'Member'
+        const newMember = await projectMemberRepository.create({
+            project_id: projectId,
+            user_id: memberId,
+            role: 'Member'
+        });
+
+        return newMember;
+    }
+
+    async deleteMemMember(projectId, memToDelete, userId) {
+        const project = await projectResporitory.findbyId(projectId); // tra ve object
+        if (!project) {
+            throw new Error("Không tìm thấy dự án này!");
+        }
+        const projectLeader_id = project.projectLeader_id;
+        const canDelete = userId.toString() === projectLeader_id.toString();
+        if (!canDelete) {
+            throw new Error("Bạn không có quyền xóa thành viên!");
+        }
+        const isAlreadyMember = await projectMemberRepository.checkMemberInProject(projectId, memberId);
+        if (!isAlreadyMember) {
+            throw new Error("Người này ko phải là thành viên của dự án!");
+        }
+        await projectMemberRepository.delete(memToDelete);
+    }
+
+    // async assignTask(projectId, memToAssign) {
+    //     const pro
+    // }
 }
 
 module.exports = new projectService();

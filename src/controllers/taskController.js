@@ -1,4 +1,4 @@
-const taskService = require('../services/taskService');
+const taskService = require('../service/taskService');
 
 class taskController {
     //Delete

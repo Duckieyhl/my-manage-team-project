@@ -1,4 +1,4 @@
-const project = require('../model/project');
+const project = require('../models/project');
 
 class projectResporitory {
 

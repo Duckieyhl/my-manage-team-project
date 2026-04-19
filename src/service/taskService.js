@@ -1,4 +1,4 @@
-const TaskResporitory = require('..resporitory/taskResporitory')
+const taskResporitory = require('../resporitory/taskResporitory')
 
 class taskService {
     async createNewTask(data) {

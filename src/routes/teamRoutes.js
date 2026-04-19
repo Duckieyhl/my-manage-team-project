@@ -17,7 +17,7 @@ router.get('/:teamId', teamController.getAll);
 router.get('/:teamId', teamController.getDetail);
 
 // read all project
-router.get()
+// router.get()
 
 // update project
 router.patch('/teamId')

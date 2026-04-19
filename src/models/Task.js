@@ -10,6 +10,6 @@ const taskSchema = new mongoose.Schema({
     assignee_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     reporter_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     due_date: Date
-}, { timestamps: true }); // Tự tạo created_at và updated_at như trong hình
+}, { timestamps: true }); // Tự tạo created_at và updated_at 
 
-module.exports = mongoose.model('Task', taskSchema);
+module.exports = mongoose.model('task', taskSchema);

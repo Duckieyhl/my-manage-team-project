@@ -1,4 +1,4 @@
-const projectService = require('../services/projectService');
+const projectService = require('../service/projectService');
 
 class projectController {
     //Create
@@ -92,11 +92,11 @@ class projectController {
     async addMember(req, res) {
         try {
             const { projectId } = req.params;
-            const adminId = req.user.id;    // Người thực hiện (Leader?)
+            const userId = req.user.id;    // Người thực hiện (Leader?)
             const { memberId } = req.body;  // Người được thêm
 
             // Chỉ gọi duy nhất 1 dòng này, để Service lo hết logic check quyền
-            const result = await projectService.addMember(projectId, adminId, memberId);
+            const result = await projectService.addMember(projectId, userId, memberId);
 
             res.status(200).json({ message: "Thành công", data: result });
         } catch (error) {
@@ -123,7 +123,7 @@ class projectController {
             const projectId = req.params.projectId;
             const userId = req.user.id;
             const memToAssign = req.body.id;
-            await projectService.assignTask(projectId, memToAssign);
+            await projectService.assignTask(projectId, memToAssign, userId);
             res.status(200).json({
                 message: "Giao việc thành công!",
                 data: task
