@@ -74,8 +74,18 @@ class projectService {
     }
 
     async updateProject(projectId, userId, updateData) {
-        if ()
+        const project = await projectResporitory.findbyId(projectId);
+        if (!project) {
+            throw new Error("Không tìm thấy dự án này!");
+        }
+        const projectLeader_id = project.projectLeader_id;
+        if (userId.toString() === projectLeader_id.toString()) {
+            return await projectResporitory.update(projectId, updateData);
+        }
+        else {
+            throw new Error("Bạn không phải Leader của dự án này, không có quyền chỉnh sửa!");
+        }
     }
-
 }
+
 module.exports = new projectService();
