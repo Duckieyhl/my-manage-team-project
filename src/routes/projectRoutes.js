@@ -3,8 +3,6 @@ const projectController = require('../controllers/projectController')
 const router = express.Router()
 const cors = require("cors");
 
-const router = express.Router();
-
 // create
 router.post('/createTask', projectController.createTask);
 
