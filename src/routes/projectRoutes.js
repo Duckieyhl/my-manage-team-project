@@ -3,7 +3,7 @@ const projectController = require('../controllers/projectController')
 const router = express.Router()
 const cors = require("cors");
 
-router.use(cors())
+const router = express.Router();
 
 // create
 router.post('/createTask', projectController.createTask);
@@ -15,7 +15,7 @@ router.get('/:projectId/members', projectController.readAllProjectMember);
 router.get('/:projectId/task', projectController.readAllProjectTask);
 
 // update project
-router.patch('/:projectId', projectController.updateProject);
+router.patch("/:projectId", projectController.updateProject);
 
 // delete project
 router.delete('/:projectId', projectController.deleteProject);
@@ -34,3 +34,4 @@ router.patch('/:projectId/tasks/assign', projectController.assignTask);
 module.exports = router; // Hoặc cách bạn đang export
 
 
+module.exports = router;
