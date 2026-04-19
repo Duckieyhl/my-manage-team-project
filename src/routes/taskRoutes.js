@@ -1,7 +1,7 @@
 const express = require('express')
 const taskController = require('../controllers/taskController')
 const router = express.Router()
-const cors = express.cors();
+const cors = require("cors");
 const { authMiddleware } = require('../middlewares/auth.middleware');
 
 router.use(cors())

@@ -1,4 +1,4 @@
- async createProject(req, res) {
+ function createProject(req, res) {
     try {
         // nhớ chỉnh url sao cho có team_id phía trc
         const { title, description, deadline, team_id, assign_id } = req.body;

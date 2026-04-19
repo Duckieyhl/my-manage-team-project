@@ -48,4 +48,4 @@ class taskRepository {
     }
 }
 
-module.exports = new TaskRepository();
+module.exports = new taskRepository();

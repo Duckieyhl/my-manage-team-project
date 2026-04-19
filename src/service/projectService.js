@@ -1,7 +1,7 @@
-const projectResporitory = require('..resporitory/projectResporitory')
-const taskService = require('taskService')
+const projectResporitory = require('../resporitory/projectResporitory')
+const taskService = require('./taskService')
 const task = require('../models/task')
-const projectMemberRepository = require('../repositories/projectMember.repository');
+// const projectMemberRepository = require("../resporitory/projectMember.repository");
 
 
 class projectService {

@@ -1,35 +1,33 @@
-const express = require('express')
-const teamController = require('../controllers/projectController')
-const router = express.Router()
-const cors = express.cors();
+const express = require("express");
+const cors = require("cors");
+const projectController = require("../controllers/projectController");
 
-router.use(cors())
+const router = express.Router();
 
-// create
-router.post('/createTask', projectController.createProject);
+router.use(cors());
 
-//Read all project member
-router.get('/:projectId', projectController.getAll);
+// create task
+router.post("/createTask", projectController.createTask);
 
-//Read all project task
-router.get('/:projectId,projectController.getTask');
+// Read all project member
+router.get("/:projectId", projectController.readAllProjectMember);
+
+// Read all project task (đổi route cho khác)
+router.get("/:projectId/tasks", projectController.readAllProjectTask);
 
 // update project
-router.patch('/:projectId', projectController.updateProject);
+router.patch("/:projectId", projectController.updateProject);
 
 // delete project
-router.delete(':projectId,'projectController.deleteProject);
+router.delete("/:projectId", projectController.deleteProject);
 
 // add member
-router.post(':projectId', projectController.addMem);
+router.post("/:projectId/member", projectController.addMember);
 
 // delete member
-router.delete(':projectId', projectController.deleteMem);
+router.delete("/:projectId/member", projectController.deleteMem);
 
 // assign task
-router.patch(':projectId', projectController.assign);
+router.patch("/:projectId/assign", projectController.assignTask);
 
-//thống kê stat nếu dc
-
-
-
+module.exports = router;
