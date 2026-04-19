@@ -1,43 +1,13 @@
-const TaskService = require('../services/task.service');
+const taskService = require('../services/taskService');
 
-class TaskController {
-    //Create
-    async createTask(req, res) {
-        try {
-            // nhớ chỉnh url sao cho
-            const { title, description, deadline, project_id, assign_id } = req.body;
-
-            // Lấy userId của người tạo từ Middleware Auth (như đã bàn)
-            const createdBy = req.user.id;
-
-            // Gom lại để gửi xuống Service xử lý
-            const newTaskData = {
-                title,
-                description,
-                deadline,
-                project_id,
-                assign_id,
-                createdBy
-            };
-
-            const task = await TaskService.createNewTask(newTaskData);
-
-            res.status(201).json({
-                message: "Tạo công việc thành công!",
-                data: task
-            });
-        } catch (error) {
-            res.status(400).json({ message: error.message });
-        }
-    }
-
+class taskController {
     //Delete
     async deleteTask(req, res) {
         try {
             const { taskId } = req.params;
             const userId = req.user.id; // Lấy từ middleware auth
 
-            await TaskService.deleteTask(taskId, userId);
+            await taskService.deleteTask(taskId, userId); // cấn có task để xóa đúng nvu còn userId để check quyền hạn
 
             res.status(200).json({ message: "Xóa công việc thành công!" });
         } catch (error) {
@@ -66,7 +36,7 @@ class TaskController {
             const userId = req.user.id;
 
             // Gọi Service
-            const tasks = await TaskService.getAllTasksForUser(userId);
+            const tasks = await taskService.getAllTasksForUser(userId);
 
             res.status(200).json(tasks);
         } catch (error) {
@@ -98,7 +68,7 @@ class TaskController {
                 return res.status(400).json({ message: "Không có dữ liệu hợp lệ để cập nhật!" });
             }
 
-            const updatedTask = await TaskService.updateTask(taskID, userId, updateData);
+            const updatedTask = await taskService.updateTask(taskID, userId, updateData);
             // 2. Trả về kết quả thành công và dữ liệu mới
             res.status(200).json({
                 message: "Cập nhật công việc thành công!",
@@ -112,4 +82,4 @@ class TaskController {
     }
 }
 
-module.exports = new TaskController();
+module.exports = new taskController();

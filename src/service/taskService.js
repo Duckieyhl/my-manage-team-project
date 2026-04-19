@@ -1,11 +1,13 @@
-class TaskService {
+const TaskResporitory = require('..resporitory/taskResporitory')
+
+class taskService {
     async createNewTask(data) {
-        return await TaskRepository.create(data);
+        return await taskRepository.create(data);
     }
 
     async deleteTask(taskId, userId) {
         // 1. Kiểm tra task có tồn tại không
-        const task = await TaskRepository.findById(taskId);
+        const task = await taskRepository.findById(taskId);
         if (!task) {
             throw new Error("Công việc không tồn tại hoặc đã bị xóa trước đó!");
         }
@@ -31,7 +33,7 @@ class TaskService {
         }
 
         // 2. Gọi Repository để lấy dữ liệu
-        const tasks = await TaskRepository.findByUserId(userId);
+        const tasks = await taskRepository.findByUserId(userId);
 
         // 3. Xử lý dữ liệu trước khi trả về (nếu cần)
         // Ví dụ: đếm xem có bao nhiêu task, hoặc phân loại task theo trạng thái
@@ -40,7 +42,7 @@ class TaskService {
 
     async getDetailTask(taskId, userId) {
         // 1. Lấy task từ Repo
-        const task = await TaskRepository.findByIDDetail(taskId);
+        const task = await taskRepository.findByIDDetail(taskId);
         if (!task) throw new Error("Không tìm thấy công việc!");
 
         // 2. Kiểm tra xem userId này có phải là thành viên của Project đó không
@@ -61,7 +63,7 @@ class TaskService {
 
     async updateTask(taskId, userId, updateData) {
         // 1. Tìm task gốc
-        const task = await TaskRepository.findByID(taskId);
+        const task = await taskRepository.findByID(taskId);
         if (!task) throw new Error("Không tìm thấy công việc");
 
         // 2. Check quyền: Chỉ người tạo (createdBy) hoặc người được giao (assign_id) mới được sửa
@@ -75,9 +77,9 @@ class TaskService {
         }
 
         // 3. Gọi Repo để lưu vào DB
-        return await TaskRepository.update(taskId, updateData);
+        return await taskRepository.update(taskId, updateData);
     }
 
 }
 
-module.exports = new TaskService();
+module.exports = new taskService();

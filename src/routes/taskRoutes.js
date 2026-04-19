@@ -8,7 +8,7 @@ router.use(cors())
 router.use(authMiddleware);
 
 // --- 1. Những cái cụ thể, không chứa biến :id cho lên ĐẦU ---
-router.post('/createTask', taskController.createTask);
+// router.post('/createTask', taskController.createTask);
 router.get('/myTask', taskController.getAllTasksGlobal); // Đưa lên đây!
 
 // --- 2. Những cái có biến :taskID cho xuống DƯỚI ---

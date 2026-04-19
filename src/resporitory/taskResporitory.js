@@ -1,6 +1,6 @@
-const Task = require('../models/Task');
+const task = require('../models/task');
 
-class TaskRepository {
+class taskRepository {
     async create(taskData) {
         return await Task.create(taskData);
     }
@@ -17,7 +17,7 @@ class TaskRepository {
         return await Task.find({
             assign_id: userId,
         })
-            .populate('project_id', 'projectName') // Lấy kèm tên dự án để hiển thị lên UI cho đẹp cái này quy định những cái cần lấy
+            .populate('project_id', 'projectName', 'title', 'description') // Lấy kèm tên dự án để hiển thị lên UI cho đẹp cái này quy định những cái cần lấy
             .sort({ createdAt: -1 }); // Task mới nhất hiện lên đầu
     }
 
@@ -39,5 +39,13 @@ class TaskRepository {
             throw new Error("Lỗi khi cập nhật dữ liệu tại Repository: " + error.message);
         }
     }
+    async findByProjectId(projectId) {
+
+    }
+
+    async findTasksForMember(projectId, userId) {
+
+    }
+}
 
 module.exports = new TaskRepository();
