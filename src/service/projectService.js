@@ -39,12 +39,23 @@ class projectService {
         // 4. Mọi thứ OK thì gọi Repository tạo Task
         return await taskRepository.create(data);
     }
-    // async deleteProject(projectId)
+
+    async deleteProject(projectId) {
+        const project = await projectResporitory.findbyId(projectId);
+        if (!project) {
+            throw new Error("Không tìm thấy dự án này!");
+        }
+        const leader = project.createBy;
+        if (userId.toString() !== leader.toString()) {
+            throw new Error("Bạn không có quyền chỉnh sửa dự án này!");
+        }
+        return await project.delete(projectId);
+    }
 
     async readAllProjectMember(projectId) {
         // Tìm tất cả user trong project và chưa bị xóa
         // neen check laij sau
-        return await projectMember.find(projectId)
+        return await projectMember.find(projectId);
 
 
         // return await projectMember.find({ project_id: projectId })
@@ -128,16 +139,41 @@ class projectService {
         if (!canDelete) {
             throw new Error("Bạn không có quyền xóa thành viên!");
         }
-        const isAlreadyMember = await projectMemberRepository.checkMemberInProject(projectId, memberId);
+        const isAlreadyMember = await projectMemberRepository.checkMemberInProject(projectId, memToDelete);
         if (!isAlreadyMember) {
             throw new Error("Người này ko phải là thành viên của dự án!");
         }
-        await projectMemberRepository.delete(memToDelete);
+        const res = await projectMemberRepository.delete(memToDelete);
+        if (!res) {
+            throw new Error("Xóa không thành công, có thể dữ liệu đã bị thay đổi.");
+        }
+
+        // Trả về kết quả để Controller sử dụng
+        return res;
     }
 
-    // async assignTask(projectId, memToAssign) {
-    //     const pro
-    // }
+    async assignTask(projectId, taskId, memToAssign, userId) {
+        const project = await projectResporitory.findbyId(projectId); // tra ve object
+        if (!project) {
+            throw new Error("Không tìm thấy dự án này!");
+        }
+
+        const projectLeader_id = project.projectLeader_id;
+        const canAssign = userId.toString() === projectLeader_id.toString();
+        if (!canAssign) {
+            throw new Error("Bạn không có quyền phân nhiệm vụ!");
+        }
+        const isMember = await projectMemberRepository.checkMemberInProject(projectId, memToAssign);
+        if (!isMember) {
+            throw new Error("Người này không thuộc thành viên dự án, không thể giao việc!");
+        }
+        const updatedTask = await taskRepository.update(taskId, { assign_id: memToAssign });
+
+        if (!updatedTask) {
+            throw new Error("Không tìm thấy Task để cập nhật!");
+        }
+        return updatedTask;
+    }
 }
 
 module.exports = new projectService();

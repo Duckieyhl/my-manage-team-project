@@ -8,6 +8,10 @@ const projectSchema = new mongoose.Schema({
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     startDate: { type: Date },
     endDate: { type: Date },
+    // tasks: [{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Task'
+    // }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('project', projectSchema);

@@ -39,13 +39,13 @@ class taskRepository {
             throw new Error("Lỗi khi cập nhật dữ liệu tại Repository: " + error.message);
         }
     }
-    // async findByProjectId(projectId) {
+    async findByProjectId(projectId) {
+        return await task.find({ project_id: projectId });
+    }
 
-    // }
-
-    // async findTasksForMember(projectId, userId) {
-
-    // }
+    async findTasksForMember(projectId, userId) {
+        return await task.find({ project_id: projectId, reporter_id: userId }).lean();
+    }
 }
 
 module.exports = new taskRepository();

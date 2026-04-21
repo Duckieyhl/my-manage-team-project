@@ -123,7 +123,8 @@ class projectController {
             const projectId = req.params.projectId;
             const userId = req.user.id;
             const memToAssign = req.body.id;
-            await projectService.assignTask(projectId, memToAssign, userId);
+            const taskId = req.body.taskId;
+            await projectService.assignTask(projectId, memToAssign, userId, taskId);
             res.status(200).json({
                 message: "Giao việc thành công!",
                 data: task
