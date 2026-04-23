@@ -3,8 +3,10 @@ const projectController = require('../controllers/projectController')
 const router = express.Router()
 const cors = require("cors");
 
-// create
-router.post('/createTask', projectController.createTask);
+// create task
+router.post('/tasks', projectController.createTask);
+
+// router.get('/:my-project',projectController.readAllProject);
 
 //Read all project member
 router.get('/:projectId/members', projectController.readAllProjectMember);
@@ -31,5 +33,3 @@ router.patch('/:projectId/tasks/assign', projectController.assignTask);
 
 module.exports = router; // Hoặc cách bạn đang export
 
-
-module.exports = router;

@@ -2,6 +2,9 @@ const taskResporitory = require('../resporitory/taskResporitory')
 
 class taskService {
     async createNewTask(data) {
+        const projectExists = await projectRepository.findById(data.project_id);
+        if (!projectExists) throw new Error("Dự án không tồn tại!");
+
         return await taskRepository.create(data);
     }
 
@@ -42,7 +45,7 @@ class taskService {
 
     async getDetailTask(taskId, userId) {
         // 1. Lấy task từ Repo
-        const task = await taskRepository.findByIDDetail(taskId);
+        const task = await taskRepository.findById(taskId);
         if (!task) throw new Error("Không tìm thấy công việc!");
 
         // 2. Kiểm tra xem userId này có phải là thành viên của Project đó không

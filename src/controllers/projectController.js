@@ -4,11 +4,36 @@ class projectController {
     //Create
     async createTask(req, res) {
         try {
-            const { projectId } = req.params.projectId;
+            const project_id = req.params.projectId;
             const { title, description, startDate, endDate, assign_id } = req.body;
 
             // Lấy userId của người tạo từ Middleware Auth 
             const createdBy = req.user.id;
+
+            if (!title || !description || !assign_id) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Thiếu thông tin cần thiết để tạo task"
+                });
+            }
+
+            const now = new Date();
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+
+            if (start < new Date(now.getTime() - 10 * 60000)) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Ngày bắt đầu không được ở quá khứ"
+                });
+            }
+
+            if (end <= start) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Ngày kết thúc phải sau ngày bắt đầu "
+                });
+            }
 
             // Gom lại để gửi xuống Service xử lý
             const newTaskData = {
@@ -25,7 +50,7 @@ class projectController {
             // 1. ProjectId có tồn tại không?
             // 2. Người tạo (creatorId) có quyền tạo task trong project này không?
             // 3. Người được giao (assigneeId) có thuộc project này không?
-            const task = await ProjectService.createNewTask(newTaskData);
+            const task = await ProjectService.createNewTask(newTaskData, createBy);
 
             res.status(201).json({
                 message: "Tạo công việc thành công!",

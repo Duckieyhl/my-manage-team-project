@@ -9,7 +9,8 @@ const taskSchema = new mongoose.Schema({
     priority: String,
     assignee_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     reporter_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    due_date: Date
+    startDate: Date,
+    endDate: Date
 }, { timestamps: true }); // Tự tạo created_at và updated_at 
 
 module.exports = mongoose.model('task', taskSchema);

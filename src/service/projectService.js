@@ -5,18 +5,19 @@ const task = require('../models/task')
 
 
 class projectService {
-    // task.service.js
-    // Đừng quên require Repository của ProjectMember vào nhé
-    async createNewTask(data) {
-        const { title, project_id, assign_id, startDate, endDate } = data;
 
-        // 1. Kiểm tra thiếu thông tin cơ bản
-        if (!title || !project_id || !assign_id) {
-            throw new Error("Thiếu thông tin bắt buộc để tạo Task.");
+    async createNewTask(data) {
+        // Service sẽ kiểm tra:
+        // 1. ProjectId có tồn tại không?
+        // 2. Người tạo (creatorId) có quyền tạo task trong project này không?
+        // 3. Người được giao (assigneeId) có thuộc project này không?
+        const { title, description, project_id, assign_id, startDate, endDate } = data;
+
+        const isExist = await projectResporitory.findbyId(project_id);
+        if (!isExist) {
+            throw new Error("Project này ko tồn tại");
         }
 
-        // 2. CHECK QUAN TRỌNG: Kiểm tra Assignee có trong Project không
-        // Bạn tìm một bản ghi trong bảng trung gian khớp cả 2 ID này
         const isMember = await projectMemberRepository.findOne({
             project_id: project_id,
             user_id: assign_id
@@ -25,18 +26,6 @@ class projectService {
         if (!isMember) {
             throw new Error("Người thực hiện không thuộc dự án này. Vui lòng kiểm tra lại!");
         }
-
-        // 3. Check logic ngày tháng
-        const now = new Date();
-        if (new Date(startDate) < now.setMinutes(now.getMinutes() - 10)) {
-            throw new Error("Ngày bắt đầu không được ở quá khứ.");
-        }
-
-        if (new Date(endDate) <= new Date(startDate)) {
-            throw new Error("Ngày kết thúc phải sau ngày bắt đầu.");
-        }
-
-        // 4. Mọi thứ OK thì gọi Repository tạo Task
         return await taskRepository.create(data);
     }
 

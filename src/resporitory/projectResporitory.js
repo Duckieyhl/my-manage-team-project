@@ -4,8 +4,6 @@ const task = require('../models/task');
 class projectResporitory {
     // async projectResporitory.update(projectId, updateData){}
     async findbyId(projectId) {
-        // Mongoose cần biết bạn muốn tìm cái ID nào
-        // Thêm .lean() để trả về Object JS thuần, giúp code chạy nhanh hơn
         return await project.findById(projectId).lean();
     }
 
@@ -21,7 +19,6 @@ class projectResporitory {
     }
 
 
-
     async update(projectId, updateData) {
         return await project.findByIdAndUpdate(
             projectId,
@@ -32,6 +29,10 @@ class projectResporitory {
                 context: 'query'
             }
         ).lean();
+    }
+
+    async findByTeamId(teamId) {
+        return await project.find({ team_id: teamId }).lean();
     }
 
 }

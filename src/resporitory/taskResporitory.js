@@ -6,7 +6,7 @@ class taskRepository {
     }
 
     async findbyID(taskID) {
-        return await task.findById(taskID)
+        return await task.findById(taskID);
     }
 
     async Delete(taskId) {
@@ -17,13 +17,21 @@ class taskRepository {
         return await task.find({
             assign_id: userId,
         })
-            .populate('project_id', 'projectName', 'title', 'description') // Lấy kèm tên dự án để hiển thị lên UI cho đẹp cái này quy định những cái cần lấy
+            .select()
+            .populate('project_id', 'title description projectLeader_id')
             .sort({ createdAt: -1 }); // Task mới nhất hiện lên đầu
     }
+    //  title: { type: String, required: true },
+    //     description: { type: String },
+    //     team_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Team', required: true },
+    //     projectLeader_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    //     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    //     startDate: { type: Date },
+    //     endDate: { type: Date },
 
-    async findDetailbyId(taskId) {
-        return await task.find(taskId).populate('project_id', 'projectName', 'reporter_id', 'status', 'priority', 'description')
-    }
+    // async findDetailbyId(taskId) {
+    //     return await task.find(taskId);
+    // }
 
     async update(taskId, updates) {
         try {
