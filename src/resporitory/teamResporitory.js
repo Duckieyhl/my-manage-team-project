@@ -26,5 +26,6 @@ class teamRepository {
             { new: true, runValidators: true } // Trả về bản mới & kiểm tra ràng buộc Schema
         );
     }
-
 }
+
+module.exports = new teamRepository();

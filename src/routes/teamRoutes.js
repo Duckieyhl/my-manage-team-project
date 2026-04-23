@@ -7,7 +7,7 @@ const cors = require("cors");
 router.use(cors())
 // router.use(authMiddleware);
 
-router.post('/join', teamController.joinTeam);
+// router.post('/join', teamController.joinTeam); 
 //1
 router.get('/all-my-team', teamController.getAllTeam);
 
